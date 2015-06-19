@@ -15,7 +15,7 @@ Installation instructions
 - Install chef-dk from [here] (https://downloads.chef.io/chef-dk/). This includes berkshelf, needed for the provision. Install it with:
   - `` sudo dpkg -i chefdk_0.6.2-1_amd64.deb ``
 - Install the vagrant-berkshelf plugin
-  - ``  plugin install vagrant-berkshelf `` 
+  - ``vagrant plugin install vagrant-berkshelf `` 
 - Checkout this repo on some dir. And go inside the Calavera repo
 - First time build the Calavera machines with:
   - `` ./calavera.build.sh ``
