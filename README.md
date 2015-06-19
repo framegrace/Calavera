@@ -5,6 +5,25 @@ This is fork uses Docker containers instead of VirtualBox. I needed Calavera to 
 
 I've also added a "dnsmasq" only container, which really eases the inter-container and host-container communications. (Something on which docker also have some problems)
 
+Installation instructions
+==
+- Install Latest vagrant version from [here] (http://www.vagrantup.com/downloads.html). (Download the package and install it with "sudo dpkg -i")
+- Install latest docker.
+  - ``wget -qO- https://get.docker.com/ | sudo sh``
+- Install build-essential (Some steps may require compile things)
+  - ``sudo apt-get install build-essential ``
+- Install chef-dk from [here] (https://downloads.chef.io/chef-dk/). This includes berkshelf, needed for the provision. Install it with:
+  - `` sudo dpkg -i chefdk_0.6.2-1_amd64.deb ``
+- Install the vagrant-berkshelf plugin
+  - ``  plugin install vagrant-berkshelf `` 
+- Checkout this repo on some dir. And go inside the Calavera repo
+- First time build the Calavera machines with:
+  - `` ./calavera.build.sh ``
+  - Every time you run this script, all the nodes will be destroyed and purged. So just use it when you want to initialize or to completelly clean the environment.
+- You can handle the nodes "brazos","espina",etc... with normal vagrant commands.
+- Everytime you want to re/start the environment, use:
+  - ``./calavera.startup.sh`` 
+  - This will make the environment up and running in case it was in an unstabe state.
 
 Calavera
 ========
