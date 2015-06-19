@@ -5,6 +5,7 @@ group 'jenkins'
 
 user 'jenkins' do
   group 'jenkins'
+  password '*'
 end
 
 

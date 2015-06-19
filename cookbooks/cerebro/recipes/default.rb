@@ -6,15 +6,21 @@ group 'jenkins'
 
 user 'git' do
   group 'git'
+  password "*"
+  action [:create,:unlock]
 end
 
 user 'vagrant' do
   group 'git'
+  password "*"
+  action [:create,:unlock]
 end
 
 user 'jenkins' do   # jenkins will need to ssh in to retrieve files to build
   group 'jenkins'
   group 'git'
+  password "*"
+  action [:create,:unlock]
 end
 
 directory "/home/hijo.git/"  do
@@ -34,7 +40,7 @@ directory "/home/jenkins/.ssh"  do
 end
 
 execute 'Jenkins keys' do
-  cwd 'home/vagrant/.ssh'
+  cwd '/home/vagrant/.ssh'
   command 'cp * /home/jenkins/.ssh'  # this should include authorized keys. 
 end
 

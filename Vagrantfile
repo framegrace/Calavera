@@ -3,6 +3,8 @@
 #  cerebro, brazos, espina, hombros, manos, cara
 
 #Berksfile tweak needed per https://github.com/berkshelf/vagrant-berkshelf/issues/237  **/.git
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'docker'
+MY_IP=ENV['MY_IP']||"300.300.300.300"
 
 # dependencies:
   # manos => cerebro
@@ -13,11 +15,32 @@
   # cara => espina
 
 Vagrant.configure(2) do |config|
-  if ARGV[1]=='base'
-    config.vm.box = "opscode/temp"
-  else
-    config.vm.box = "opscode-ubuntu-14.04a"  # this box will not be on your machine to start
+  config.ssh.private_key_path = File.expand_path("../keys/id_rsa", __FILE__)
+  config.ssh.username = "root"
+  config.vm.provider "docker" do |d|
+    d.build_dir = "."
+      d.build_dir = "."
+      #d.create_args = ["--cap-add=SYS_PTRACE"]
+      d.create_args = ["--privileged=true","--dns="+MY_IP]
+#      d.dns_server = ENV['MY_IP']
+#      d.name = "base"
+      d.remains_running = true
+#      d.link("brazos:brazos")
+      #d.cmd = ["bash","-c","mkdir /var/run/sshd;chmod 0755 /var/run/sshd; /usr/sbin/sshd -D"]
+#      d.cmd = ["/sbin/my_init","--enable-insecure-key"]
+      d.has_ssh = true
   end
+
+#config.vm.provider :docker do |docker, override|
+    #docker.cmd = ["/usr/sbin/sshd","-D"]
+    #docker.remains_running = true
+    #docker.has_ssh = true
+#end
+  #if ARGV[1]=='base'
+    #config.vm.box = "opscode/temp"
+  #else
+    #config.vm.box = "opscode-ubuntu-14.04a"  # this box will not be on your machine to start
+  #end
   config.berkshelf.enabled = true
 
   # how to boost capacity
@@ -41,11 +64,21 @@ Vagrant.configure(2) do |config|
     base.vm.host_name              ="base.calavera.biz"
     base.vm.network                 "private_network", ip: "192.168.33.29"
     base.vm.network                 "forwarded_port", guest: 22, host: 2229, auto_correct: true
-    base.vm.network                 "forwarded_port", guest: 80, host: 8029
-    base.vm.network                 "forwarded_port", guest: 8080, host: 8129
+    #base.vm.network                 "forwarded_port", guest: 80, host: 8029
+    base.vm.network                 "forwarded_port", guest: 80, host: 8030
+    #base.vm.network                 "forwarded_port", guest: 8080, host: 8129
+    base.vm.network                 "forwarded_port", guest: 8080, host: 8130
 
     base.vm.synced_folder           ".",         "/home/base"
     base.vm.synced_folder           "./shared", "/mnt/shared"
+
+    #base.vm.provider "docker" do |d|
+      #d.build_dir = "."
+      #d.build_args = ["-t=base"]
+      #d.name = "base"
+      #d.remains_running = true
+      #d.cmd = ["bash","-c","mkdir /var/run/sshd;chmod 0755 /var/run/sshd; /usr/sbin/sshd -D"]
+    #end
 
     #base.vm.provision             :shell, path: "./shell/base.sh"
 
@@ -75,6 +108,9 @@ Vagrant.configure(2) do |config|
     cerebro.vm.synced_folder      "./shared", "/mnt/shared"
 
     #cerebro.vm.provision       :shell, path: "./shell/cerebro.sh"
+    cerebro.vm.provider "docker" do |d|
+      d.name = "cerebro"
+    end
 
     cerebro.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]
@@ -101,12 +137,16 @@ Vagrant.configure(2) do |config|
     brazos.vm.synced_folder        ".",         "/home/brazos"
     brazos.vm.synced_folder        "./shared", "/mnt/shared"
 
+    brazos.vm.provider "docker" do |d|
+      d.name = "brazos"
+    end
+
     brazos.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]
+      chef.add_recipe             "java7::default"
       chef.add_recipe             "git::default"
       chef.add_recipe             "localAnt::default"
       chef.add_recipe             "shared::_junit"
-      chef.add_recipe             "java7::default"
       chef.add_recipe             "tomcat::default"
       chef.add_recipe             "brazos::default"
     end
@@ -121,7 +161,7 @@ Vagrant.configure(2) do |config|
     espina.vm.network               "private_network", ip: "192.168.33.32"
     espina.vm.network               "forwarded_port", guest: 22, host: 2232, auto_correct: true
     espina.vm.network               "forwarded_port", guest: 80, host: 8032
-    espina.vm.network              "forwarded_port", guest: 8080, host: 8132
+    espina.vm.network              "forwarded_port", guest: 8081, host: 8132
     
     espina.ssh.forward_agent        =true
 
@@ -129,8 +169,13 @@ Vagrant.configure(2) do |config|
     espina.vm.synced_folder        "./shared", "/mnt/shared"
     #espina.vm.provision       :shell, path: "./shell/espina.sh"
 
+    espina.vm.provider "docker" do |d|
+      d.name = "espina"
+    end
+
     espina.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]
+      chef.add_recipe             "java7::default"
       chef.add_recipe             "espina::default"
     end
   end
@@ -156,6 +201,9 @@ Vagrant.configure(2) do |config|
     hombros.vm.synced_folder        "./shared", "/mnt/shared"
 
     #hombros.vm.provision          :shell, path: "./shell/hombros.sh"
+    hombros.vm.provider "docker" do |d|
+      d.name = "hombros"
+    end
 
     hombros.vm.provision :chef_zero do |chef|
       chef.cookbooks_path           = ["./cookbooks/"]
@@ -184,6 +232,10 @@ Vagrant.configure(2) do |config|
     manos.vm.synced_folder        ".",         "/home/manos"
     manos.vm.synced_folder        "./shared", "/mnt/shared"
     #manos.vm.provision         :shell, path: "./shell/manos.sh"
+
+    manos.vm.provider "docker" do |d|
+      d.name = "manos"
+    end
 
     manos.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]
@@ -248,6 +300,10 @@ Vagrant.configure(2) do |config|
     cara.vm.synced_folder          ".",         "/home/cara"
     cara.vm.synced_folder          "./shared", "/mnt/shared"
     #cara.vm.provision       :shell, path: "./shell/cara.sh"]
+
+    cara.vm.provider "docker" do |d|
+      d.name = "cara"
+    end
 
     cara.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]

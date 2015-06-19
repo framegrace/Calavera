@@ -14,6 +14,7 @@ group 'git'
 
 user 'vagrant' do
   group 'git'
+  password '*'
 end
 
 ["/home/hijo/src/main/config",

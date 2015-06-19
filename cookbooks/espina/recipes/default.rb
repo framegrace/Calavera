@@ -9,6 +9,7 @@ group 'artifactory'
 
 user 'artifactory' do
   group 'artifactory'
+  password '*'
 end
 
 remote_file "/opt/artifactory-latest.zip" do
