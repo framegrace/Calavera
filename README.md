@@ -1,3 +1,11 @@
+ABOUT THIS FORK
+===============
+
+This is fork uses Docker containers instead of VirtualBox. I needed Calavera to be run on virtualized hosts, and is much easier to do that with Docker. Not all virtualization technologies allow to run nested Virtual Machines, also is much more lightweight for this uses. (Also adds some isolation quirks, which required some work)
+
+I've also added a "dnsmasq" only container, which really eases the inter-container and host-container communications. (Something on which docker also have some problems)
+
+
 Calavera
 ========
 
