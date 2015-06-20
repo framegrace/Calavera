@@ -3,7 +3,9 @@ NIC="eth0"
 name="dnsmasq"
 export MY_IP=$(ifconfig $NIC | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}')
 
-rm dnsmasq.hosts/calavera
+[ ! -d dnsmasq.hosts ] && mkdir dnsmasq.hosts
+[ -e dnsmasq.hosts/calavera ] && rm dnsmasq.hosts/calavera
+
 # Start dnsmasq server
 echo "-- Iniciant dnsmasq"
 docker run -v="$(pwd)/dnsmasq.hosts:/dnsmasq.hosts" -name=${name} -p=${MY_IP}':53:5353/udp' -d sroegner/dnsmasq
