@@ -4,7 +4,7 @@
 
 #Berksfile tweak needed per https://github.com/berkshelf/vagrant-berkshelf/issues/237  **/.git
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'docker'
-MY_IP=ENV['MY_IP']||"300.300.300.300"
+MY_IP=ENV['MY_IP']||`ifconfig eth0 | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
 
 # dependencies:
   # manos => cerebro
@@ -144,11 +144,11 @@ Vagrant.configure(2) do |config|
     brazos.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]
       chef.add_recipe             "java7::default"
-      chef.add_recipe             "git::default"
       chef.add_recipe             "localAnt::default"
-      chef.add_recipe             "shared::_junit"
-      chef.add_recipe             "tomcat::default"
       chef.add_recipe             "brazos::default"
+      chef.add_recipe             "git::default"
+      chef.add_recipe             "tomcat::default"
+      chef.add_recipe             "shared::_junit"
     end
   end
 
