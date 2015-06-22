@@ -1,4 +1,7 @@
 # final production build
+# Add jenkins to automate deployment
+include_recipe "brazos::default"
+package "wget"
 
 ["/var/lib/tomcat6/webapps/ROOT/WEB-INF/",
  "/var/lib/tomcat6/webapps/ROOT/WEB-INF/lib"].each do | name |
@@ -21,6 +24,15 @@ remote_file "/var/lib/tomcat6/webapps/ROOT/WEB-INF/web.xml" do
   mode '0755'
   #checksum "3a7dac00b1" # A SHA256 (or portion thereof) of the file.
 end
+
+cookbook_file "deploy.sudo" do
+  path "/etc/sudoers.d/deploy"
+  mode 0755
+  user "root"
+  group "root"
+  action :create
+end
+
 
 
 service "tomcat6" do
