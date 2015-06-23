@@ -17,7 +17,7 @@ fi
 
 # Start dnsmasq server
 echo -n " -- Starting dnsmasq container :"
-docker run -v="$(pwd)/dnsmasq.hosts:/dnsmasq.hosts" -name=${name} -p=${MY_IP}':53:5353/udp' -d sroegner/dnsmasq > /tmp/out 2>&1
+docker run -v="$(pwd)/dnsmasq.hosts:/dnsmasq.hosts" --name=${name} -p=${MY_IP}':53:5353/udp' -d sroegner/dnsmasq > /tmp/out 2>&1
 if [ $? -ne 0 ]
 then
   echo "Error"
