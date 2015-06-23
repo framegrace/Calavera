@@ -16,7 +16,11 @@ Installation instructions
   - `` sudo dpkg -i chefdk_0.6.2-1_amd64.deb ``
 - Install the vagrant-berkshelf plugin
   - ``vagrant plugin install vagrant-berkshelf `` 
-- Checkout this repo on some dir. And, as "root" user go inside the Calavera repo. (All environment handling must be done as root)
+- Clone this repo on some dir. And, as "root" user go inside the Calavera repo. (All environment handling must be done as root)
+  - ``git clone <clone_url_for_this_repo>``
+- Copy your SSH keys to the shared/keys directory (if you don't have those keys, run 
+  - ``ssh-keygen -t rsa`` 
+and then copy the contents of $HOME/.ssh to the shared/keys directory
 - First time build the Calavera machines with:
   - `` ./calavera.build.sh ``
   - Every time you run this script, all the nodes will be destroyed and purged. So just use it when you want to initialize or to completelly clean the environment.
