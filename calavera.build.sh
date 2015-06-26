@@ -6,7 +6,7 @@ export MY_IP=$(ifconfig $NIC | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: 
 [ -e dnsmasq.hosts/calavera ] && rm dnsmasq.hosts/calavera
 
 echo "-- Destroying current environment"
-docker ps |grep dnsmasq > /dev/null 2>&1
+docker ps -a --filter "name=dnsmasq" |grep dnsmasq > /dev/null 2>&1
 if [ $? -eq "0" ] 
 then
   echo -n " -- Removing dnsmasq container :"
