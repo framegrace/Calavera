@@ -5,6 +5,12 @@ export MY_IP=$(ifconfig $NIC | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: 
 [ ! -d dnsmasq.hosts ] && mkdir dnsmasq.hosts
 [ -e dnsmasq.hosts/calavera ] && rm dnsmasq.hosts/calavera
 
+echo -n "nameserver $MY_IP
+nameserver 147.83.2.3
+nameserver 147.83.194.4
+search calavera.biz" > /etc/resolv.conf
+
+echo "$MY_IP "`hostname`" "`hostname -f` > dnsmasq.hosts/myself
 echo "-- Destroying current environment"
 docker ps -a --filter "name=dnsmasq" |grep dnsmasq > /dev/null 2>&1
 if [ $? -eq "0" ] 
@@ -17,7 +23,7 @@ fi
 
 # Start dnsmasq server
 echo -n " -- Starting dnsmasq container :"
-docker run -v="$(pwd)/dnsmasq.hosts:/dnsmasq.hosts" -name=${name} -p=${MY_IP}':53:5353/udp' -d sroegner/dnsmasq > /tmp/out 2>&1
+docker run -v="$(pwd)/dnsmasq.hosts:/dnsmasq.hosts" --name=${name} -p=${MY_IP}':53:5353/udp' -d sroegner/dnsmasq > /tmp/out 2>&1
 if [ $? -ne 0 ]
 then
   echo "Error"
@@ -27,6 +33,7 @@ else
   echo "Ok"
 fi
 
+docker kill -s HUP dnsmasq
 echo -n " -- Stopping all running nodes :"
 vagrant halt -f > /tmp/out 2>&1
 if [ $? -ne 0 ]
@@ -52,11 +59,5 @@ fi
 echo "-- Re-creating the environment"
 for NODE in cerebro brazos hombros espina manos cara
 do
-    echo "-- Building \"${NODE}\""
-    vagrant up --no-provision ${NODE}
-    vagrant reload ${NODE}
-    echo "-- Adding \"${NODE}\" to dns"
-    C_IP=`docker inspect --format='{{.NetworkSettings.IPAddress}}' ${NODE}`
-    echo "${C_IP} ${NODE} ${NODE}.calavera.biz" >> dnsmasq.hosts/calavera
-    docker kill -s HUP dnsmasq
+    ./calavera.up.sh ${NODE}
 done

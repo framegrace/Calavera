@@ -27,7 +27,7 @@ Vagrant.configure(2) do |config|
       d.remains_running = true
 #      d.link("brazos:brazos")
       #d.cmd = ["bash","-c","mkdir /var/run/sshd;chmod 0755 /var/run/sshd; /usr/sbin/sshd -D"]
-#      d.cmd = ["/sbin/my_init","--enable-insecure-key"]
+      d.cmd = ["/sbin/my_init"]
       d.has_ssh = true
   end
 
