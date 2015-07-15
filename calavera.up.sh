@@ -5,5 +5,7 @@ NODE=$1
     vagrant reload ${NODE}
     echo "-- Adding \"${NODE}\" to dns"
     C_IP=`docker inspect --format='{{.NetworkSettings.IPAddress}}' ${NODE}`
-    echo "${C_IP} ${NODE} ${NODE}.calavera.biz" >> dnsmasq.hosts/calavera
+    grep -v ${NODE} dnsmasq.hosts/calavera > /tmp/calavera.tmp
+    echo "${C_IP} ${NODE} ${NODE}.calavera.biz" >> /tmp/calavera.tmp
+    mv /tmp/calavera.tmp dnsmasq.hosts/calavera
     docker kill -s HUP dnsmasq
