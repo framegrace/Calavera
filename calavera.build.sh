@@ -5,6 +5,12 @@ export MY_IP=$(ifconfig $NIC | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: 
 [ ! -d dnsmasq.hosts ] && mkdir dnsmasq.hosts
 [ -e dnsmasq.hosts/calavera ] && rm dnsmasq.hosts/calavera
 
+echo -n "nameserver $MY_IP
+nameserver 147.83.2.3
+nameserver 147.83.194.4
+search calavera.biz" > /etc/resolv.conf
+
+echo "$MY_IP "`hostname`" "`hostname -f` > dnsmasq.hosts/myself
 echo "-- Destroying current environment"
 docker ps -a --filter "name=dnsmasq" |grep dnsmasq > /dev/null 2>&1
 if [ $? -eq "0" ] 
@@ -27,6 +33,7 @@ else
   echo "Ok"
 fi
 
+docker kill -s HUP dnsmasq
 echo -n " -- Stopping all running nodes :"
 vagrant halt -f > /tmp/out 2>&1
 if [ $? -ne 0 ]
