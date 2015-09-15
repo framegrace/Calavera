@@ -50,6 +50,14 @@ file_map.each do | fileName, pathName |
   end
 end
 
+cookbook_file '/etc/sudoers.d/vagrant' do
+  source 'vagrant_sudo'
+  mode 600
+  user 'root'
+  group 'root'
+  action :create
+end
+
 execute 'correct dev directory permissions' do
   command 'chown -R vagrant /home/hijo/ && chgrp -R git /home/hijo/'          # Chef does not have an easy way to do this. 
 end

@@ -12,8 +12,15 @@ user 'artifactory' do
   password '*'
 end
 
+#remote_file "/opt/artifactory-latest.zip" do
+#  source "http://bit.ly/Hqv9aj"    # this was being stubborn with full URL for some reason. points to latest build. 
+#  mode '0755'
+#end
+
+# Pointing to the latest is a bad idea (Latest doesn't work with java7)
+# Using 3.5.1
 remote_file "/opt/artifactory-latest.zip" do
-  source "http://bit.ly/Hqv9aj"    # this was being stubborn with full URL for some reason. points to latest build. 
+  source "http://downloads.sourceforge.net/project/artifactory/artifactory/3.5.1/artifactory-3.5.1.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fartifactory%2Ffiles%2Fartifactory%2F3.5.1%2F&ts=1442352878&use_mirror=kent"    # this was being stubborn with full URL for some reason. points to latest build. 
   mode '0755'
 end
 
