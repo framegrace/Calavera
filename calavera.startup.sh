@@ -1,4 +1,5 @@
 #!/bin/bash
+BASE=`dirname $0`
 NIC="eth0"
 name="dnsmasq"
 export MY_IP=$(ifconfig $NIC | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}')
@@ -16,8 +17,7 @@ else
   echo "-- Dnsmasq restarted" 
 fi
 
-grep "$MY_IP" /etc/resolv.conf >/dev/null 2>&1 || sed -i '/nameserver/inameserver '$MY_IP'' /etc/resolv.conf
-grep "calavera.biz" /etc/resolv.conf >/dev/null 2>&1 || sed -i '/^search/ s/$/ calavera.biz/' /etc/resolv.conf
+$BASE/setns.sh
 
 for NODE in cerebro brazos hombros espina manos cara
 do

@@ -1,16 +1,12 @@
 #!/bin/bash
+BASE=`dirname $0`
 NIC="eth0"
 name="dnsmasq"
 export MY_IP=$(ifconfig $NIC | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}')
 [ ! -d dnsmasq.hosts ] && mkdir dnsmasq.hosts
 [ -e dnsmasq.hosts/calavera ] && rm dnsmasq.hosts/calavera
 
-#echo -n "nameserver $MY_IP
-#nameserver 172.31.0.2
-#search eu-west-1.compute.internal calavera.biz" > /etc/resolv.conf
-
-grep "$MY_IP" /etc/resolv.conf >/dev/null 2>&1 || sed -i '/nameserver/inameserver '$MY_IP'' /etc/resolv.conf
-grep "calavera.biz" /etc/resolv.conf >/dev/null 2>&1 || sed -i '/^search/ s/$/ calavera.biz/' /etc/resolv.conf
+$BASE/setns.sh
 
 echo "$MY_IP "`hostname`" "`hostname -f` > dnsmasq.hosts/myself
 echo "-- Destroying current environment"
