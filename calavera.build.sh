@@ -9,8 +9,8 @@ export MY_IP=$(ifconfig $NIC | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: 
 #nameserver 172.31.0.2
 #search eu-west-1.compute.internal calavera.biz" > /etc/resolv.conf
 
-sed -i '/nameserver/inameserver '$MY_IP'' /etc/resolv.conf
-sed -i '/^search/ s/$/ calavera.biz/'
+grep "$MY_IP" /etc/resolv.conf >/dev/null 2>&1 || sed -i '/nameserver/inameserver '$MY_IP'' /etc/resolv.conf
+grep "calavera.biz" /etc/resolv.conf >/dev/null 2>&1 || sed -i '/^search/ s/$/ calavera.biz/' /etc/resolv.conf
 
 echo "$MY_IP "`hostname`" "`hostname -f` > dnsmasq.hosts/myself
 echo "-- Destroying current environment"

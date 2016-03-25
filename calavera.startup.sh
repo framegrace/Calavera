@@ -15,7 +15,10 @@ then
 else
   echo "-- Dnsmasq restarted" 
 fi
-sed -i '/nameserver/inameserver '$MY_IP'' /etc/resolv.conf 
+
+grep "$MY_IP" /etc/resolv.conf >/dev/null 2>&1 || sed -i '/nameserver/inameserver '$MY_IP'' /etc/resolv.conf
+grep "calavera.biz" /etc/resolv.conf >/dev/null 2>&1 || sed -i '/^search/ s/$/ calavera.biz/' /etc/resolv.conf
+
 for NODE in cerebro brazos hombros espina manos cara
 do
     echo "-- Iniciant \"${NODE}\""
