@@ -15,7 +15,7 @@ then
 else
   echo "-- Dnsmasq restarted" 
 fi
-
+sed -i '/nameserver/inameserver '$MY_IP'' /etc/resolv.conf 
 for NODE in cerebro brazos hombros espina manos cara
 do
     echo "-- Iniciant \"${NODE}\""

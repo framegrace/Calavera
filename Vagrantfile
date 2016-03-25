@@ -84,6 +84,7 @@ Vagrant.configure(2) do |config|
 
     base.vm.provision :chef_zero do |chef|
       chef.cookbooks_path           = ["./cookbooks/"]
+      chef.nodes_path           = ["./nodes/"]
       chef.add_recipe               "base::default"
       chef.add_recipe               "shared::default"
     end
@@ -114,6 +115,7 @@ Vagrant.configure(2) do |config|
 
     cerebro.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]
+      chef.nodes_path           = ["./nodes/"]
       chef.add_recipe             "git::default"
       chef.add_recipe             "cerebro::default"
     end
@@ -143,6 +145,7 @@ Vagrant.configure(2) do |config|
 
     brazos.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]
+      chef.nodes_path           = ["./nodes/"]
       chef.add_recipe             "java7::default"
       chef.add_recipe             "localAnt::default"
       chef.add_recipe             "brazos::default"
@@ -175,6 +178,7 @@ Vagrant.configure(2) do |config|
 
     espina.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]
+      chef.nodes_path           = ["./nodes/"]
       chef.add_recipe             "java7::default"
       chef.add_recipe             "espina::default"
     end
@@ -207,6 +211,7 @@ Vagrant.configure(2) do |config|
 
     hombros.vm.provision :chef_zero do |chef|
       chef.cookbooks_path           = ["./cookbooks/"]
+      chef.nodes_path           = ["./nodes/"]
       chef.add_recipe               "git::default"
       chef.add_recipe               "jenkins::master"
       chef.add_recipe               "hombros::default"
@@ -239,6 +244,7 @@ Vagrant.configure(2) do |config|
 
     manos.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]
+      chef.nodes_path           = ["./nodes/"]
       chef.add_recipe             "git::default"
       chef.add_recipe             "localAnt::default"
       chef.add_recipe             "java7::default"   # for some reason the Java recipe must be re-run to install Tomcat
@@ -275,6 +281,7 @@ Vagrant.configure(2) do |config|
 
       manos40.vm.provision :chef_zero do |chef|
         chef.cookbooks_path         = ["./cookbooks/"]
+      chef.nodes_path           = ["./nodes/"]
         chef.add_recipe             "git::default"
         chef.add_recipe             "localAnt::default"
         chef.add_recipe             "java7::default"   # for some reason the Java recipe must be re-run to install Tomcat
@@ -307,6 +314,7 @@ Vagrant.configure(2) do |config|
 
     cara.vm.provision :chef_zero do |chef|
       chef.cookbooks_path         = ["./cookbooks/"]
+      chef.nodes_path           = ["./nodes/"]
       chef.add_recipe             "java7::default"
       chef.add_recipe             "tomcat::default"
       chef.add_recipe             "cara::default"
@@ -335,6 +343,7 @@ Vagrant.configure(2) do |config|
 
     nervios.vm.provision :chef_zero do |chef|
       chef.cookbooks_path =       ["./cookbooks/"]
+      chef.nodes_path           = ["./nodes/"]
       #chef.add_recipe             "nervios::default"
     end
   end
@@ -360,6 +369,7 @@ Vagrant.configure(2) do |config|
 
     test.vm.provision :chef_zero do |chef|
       chef.cookbooks_path =       ["./cookbooks/"]
+      chef.nodes_path           = ["./nodes/"]
       chef.add_recipe             "test::default"
     end
   end
